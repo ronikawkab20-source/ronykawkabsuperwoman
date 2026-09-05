@@ -25,7 +25,7 @@ src="https://www.facebook.com/tr?id=1424493599432587&ev=PageView&noscript=1"
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  (function(){ emailjs.init({ publicKey: 'YOUR_EMAILJS_PUBLIC_KEY' }); })();
+  (function(){ emailjs.init({ publicKey: 'hwBWZGOJi8keW-C6l' }); })();
 </script>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1206,6 +1206,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <span class="cd-sep">:</span>
     <div class="cd-block"><span class="cd-num" id="cdS">00</span><span class="cd-label">sec</span></div>
   </div>
+  <p style="margin-top:6px;font-size:13px;opacity:0.85;font-weight:500;">2027 is in 4 months. The version of you who started today will be unrecognizable.</p>
 </div>
 
 
@@ -1215,9 +1216,20 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <div class="hero-tag">A real story. Real numbers. Real transformation.</div>
 
     <h1 class="hero-quote">
-      "If I had known you before —<br>
-      <em>how many things would have changed in my life</em>"
+      This is why your diet keeps failing you<br>
+      <em>and how my clients lose up to 7kg in their first month</em><br>
+      after years of trying everything
     </h1>
+
+    <!-- VSL -->
+    <div style="width:100%;max-width:400px;margin:36px auto 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.18);aspect-ratio:9/16;background:#000;">
+      <iframe
+        src="https://drive.google.com/file/d/1C-5t0eK3NAG1_Eto1v-dXRQfiSA0UsHA/preview"
+        style="width:100%;height:100%;border:none;display:block;"
+        allow="autoplay"
+        allowfullscreen>
+      </iframe>
+    </div>
 
     <p class="hero-sub">
       This is what 40-year-old Zaynab said after losing 25kg in 9 months — with PCOS, 3 kids, high insulin, high cholesterol, and more than 7 failed dietitians behind her.
@@ -1242,8 +1254,11 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
       </div>
     </div>
 
-    <a href="#apply" class="cta-btn">Apply for the Superwoman Program →</a>
-    <p class="cta-sub">Takes 2 minutes. Rony reviews every application personally.</p>
+    <div style="margin-top:32px;">
+      <p style="font-size:14px;font-weight:600;color:var(--bark);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">Starting from $400/month</p>
+      <a href="#apply" class="cta-btn">Apply for the Superwoman Program →</a>
+      <p class="cta-sub">Takes 2 minutes. Rony reviews every application personally.</p>
+    </div>
     <div style="display:inline-flex; align-items:center; gap:8px; margin-top:16px; background:rgba(184,89,59,0.08); border:1px solid rgba(184,89,59,0.18); border-radius:100px; padding:7px 18px;">
       <div style="display:flex; gap:4px;">
         <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
@@ -1252,7 +1267,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         <div style="width:8px;height:8px;border-radius:50%;background:var(--clay);"></div>
         <div style="width:8px;height:8px;border-radius:50%;background:var(--clay);"></div>
       </div>
-      <span style="font-size:13px;font-weight:600;color:var(--accent);">3 spots left — June cohort</span>
+      <span style="font-size:13px;font-weight:600;color:var(--accent);">3 spots left — September cohort</span>
     </div>
   </div>
 </section>
@@ -2262,7 +2277,7 @@ function validateAndCollect() {
   }
 
   // EmailJS
-  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+  emailjs.send('service_4dmisxu', 'template_gph45lw', {
     to_name: a.name, to_email: a.email, whatsapp: a.wa
   }).catch(function(e) { console.log('Email:', e); });
 
