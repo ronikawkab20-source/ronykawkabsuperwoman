@@ -652,6 +652,86 @@ section { padding: 80px 0; }
 .form-section .section-headline { color: var(--warm-white); }
 .form-section .section-sub { color: var(--earth); }
 
+/* ===== SCARCITY: DEPLETION BAR ===== */
+.depletion {
+  max-width: 520px;
+  margin: 0 auto 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.depletion-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.depletion-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--earth);
+}
+.depletion-count {
+  font-size: 14px;
+  color: var(--sand);
+}
+.depletion-count strong {
+  color: var(--accent-light);
+  font-size: 17px;
+  font-weight: 800;
+}
+.depletion-track {
+  height: 7px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+.depletion-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+}
+.depletion-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--earth);
+}
+.depletion-dot { opacity: 0.45; }
+
+/* ===== STEP INDICATOR ===== */
+.stepnote {
+  max-width: 520px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.stepnote-pill {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--deep);
+  background: var(--accent-light);
+  border-radius: 100px;
+  padding: 4px 10px;
+  margin-top: 1px;
+}
+.stepnote-text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--earth);
+}
+
 .app-form { max-width: 520px; margin: 0 auto; }
 
 .form-step {
@@ -990,6 +1070,50 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   line-height: 1.6;
 }
 .value-stack-note strong { color: var(--accent); }
+
+/* ===== PRICE ANCHOR (Booking-style) ===== */
+.price-anchor {
+  margin-top: 20px;
+  padding: 18px 20px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(184,89,59,0.2);
+  border-radius: 12px;
+  text-align: center;
+}
+.price-anchor-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.price-was {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--bark);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  opacity: 0.7;
+}
+.price-arrow { color: var(--earth); font-size: 16px; }
+.price-now {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.price-per {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bark);
+  letter-spacing: 0;
+}
+.price-anchor-note {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--charcoal);
+}
 
 /* ===== SPOTS / URGENCY ===== */
 .spots-bar {
@@ -1633,7 +1757,15 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         <span class="value-stack-total-label">Total standalone value</span>
         <span class="value-stack-total-num">$2,650</span>
       </div>
-      <p class="value-stack-note">Programs start at <strong style="color: var(--deep); font-size: 18px;">$400/month</strong> — a fraction of the $2,650 standalone value above. Your exact investment is matched to your situation after Rony reviews your application.<br><strong>Apply below. Takes 2 minutes.</strong></p>
+      <div class="price-anchor">
+        <div class="price-anchor-row">
+          <span class="price-was">$2,650</span>
+          <span class="price-arrow">→</span>
+          <span class="price-now">from $400<span class="price-per">/month</span></span>
+        </div>
+        <p class="price-anchor-note">Your exact investment is matched to your situation after Rony reviews your application.</p>
+      </div>
+      <p class="value-stack-note"><strong>Apply below. Takes 30 seconds.</strong></p>
     </div>
 
     <!-- GUARANTEE -->
@@ -1756,13 +1888,35 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 <!-- ==================== APPLICATION FORM ==================== -->
 <section class="form-section" id="apply">
   <div class="container" style="max-width: 600px; padding-top: 20px; padding-bottom: 20px;">
-    <div style="text-align: center; margin-bottom: 40px;">
+    <div style="text-align: center; margin-bottom: 32px;">
       <p class="section-tag">Apply now</p>
-      <h2 class="section-headline">You already know you can change.</h2>
+      <h2 class="section-headline">Apply for the September cohort</h2>
       <p class="form-intro-text">
-        Zaynab said "if I had known you before — how many things would have changed."
-        Don't say the same thing in 9 months. Takes 30 seconds. Rony reviews every application personally.
+        Rony reviews every application personally and replies to you on WhatsApp.
+        Not everyone is accepted — the programme only works when the fit is right.
       </p>
+    </div>
+
+    <!-- SCARCITY: real depletion bar -->
+    <div class="depletion">
+      <div class="depletion-top">
+        <span class="depletion-label">September cohort</span>
+        <span class="depletion-count"><strong>4</strong> of 5 spots left</span>
+      </div>
+      <div class="depletion-track">
+        <div class="depletion-fill" style="width:20%;"></div>
+      </div>
+      <div class="depletion-foot">
+        <span id="cohortCloses">Closes 30 September</span>
+        <span class="depletion-dot">·</span>
+        <span>Rony coaches 5 women at a time</span>
+      </div>
+    </div>
+
+    <!-- STEP INDICATOR -->
+    <div class="stepnote">
+      <span class="stepnote-pill">Step 1 of 2</span>
+      <span class="stepnote-text">Your contact details — 30 seconds. A few questions about your situation come next.</span>
     </div>
 
     <div class="app-form">
@@ -1772,7 +1926,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         <input type="text" class="form-input" id="sname" autocomplete="given-name" placeholder="Your first name" style="margin-bottom:14px;display:block;width:100%;" required>
         <input type="tel" class="form-input" id="swhatsapp" autocomplete="tel" placeholder="Your WhatsApp number (e.g. +961 71 000 000)" style="margin-bottom:14px;display:block;width:100%;" required>
         <input type="email" class="form-input" id="semail" autocomplete="email" placeholder="Your email address" style="margin-bottom:20px;display:block;width:100%;" required>
-        <button class="btn-submit" onclick="simpleSubmit()">Send My Application to Rony →</button>
+        <button class="btn-submit" onclick="simpleSubmit()">Start My Application →</button>
         <div class="form-lock">🔒 Your information is private and only seen by Rony.</div>
       </div>
 
