@@ -1324,6 +1324,8 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 <div class="countdown-bar" id="countdownBar">
   <p>September cohort closes in</p>
   <div class="countdown-digits">
+    <div class="cd-block" id="cdDayBlock"><span class="cd-num" id="cdD">00</span><span class="cd-label">days</span></div>
+    <span class="cd-sep" id="cdDaySep">:</span>
     <div class="cd-block"><span class="cd-num" id="cdH">00</span><span class="cd-label">hrs</span></div>
     <span class="cd-sep">:</span>
     <div class="cd-block"><span class="cd-num" id="cdM">00</span><span class="cd-label">min</span></div>
@@ -2156,7 +2158,20 @@ function toggleFaq(el) {
     var h = Math.floor((diff % 86400000) / 3600000);
     var m = Math.floor((diff % 3600000) / 60000);
     var s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('cdH').textContent = d > 0 ? d + 'd ' + pad(h) : pad(h);
+
+    // Hide the days block entirely on the final day
+    var dayBlock = document.getElementById('cdDayBlock');
+    var daySep   = document.getElementById('cdDaySep');
+    if (d > 0) {
+      if (dayBlock) dayBlock.style.display = '';
+      if (daySep)   daySep.style.display = '';
+      document.getElementById('cdD').textContent = pad(d);
+    } else {
+      if (dayBlock) dayBlock.style.display = 'none';
+      if (daySep)   daySep.style.display = 'none';
+    }
+
+    document.getElementById('cdH').textContent = pad(h);
     document.getElementById('cdM').textContent = pad(m);
     document.getElementById('cdS').textContent = pad(s);
   }
@@ -2968,8 +2983,9 @@ function submitWithWhatsApp() {
 <style>
 #waFloat {
   /* Demoted while ads are running — it competed with the application CTA.
-     WhatsApp now lives in the footer. Delete this line to bring it back. */
-  display: none;
+     WhatsApp now lives in the footer. Remove this line to bring it back. */
+  display: none !important;
+
   position: fixed;
   bottom: 28px;
   right: 28px;
@@ -2978,7 +2994,6 @@ function submitWithWhatsApp() {
   height: 58px;
   background: #25D366;
   border-radius: 50%;
-  display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 20px rgba(37,211,102,0.45);
