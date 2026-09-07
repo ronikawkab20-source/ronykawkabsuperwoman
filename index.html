@@ -1198,11 +1198,11 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 
 
 <div class="countdown-bar" id="countdownBar">
-  <p>Only 3 spots left — this offer expires in</p>
+  <p>September cohort closes in</p>
   <div class="countdown-digits">
-    <div class="cd-block"><span class="cd-num" id="cdH">11</span><span class="cd-label">hrs</span></div>
+    <div class="cd-block"><span class="cd-num" id="cdH">00</span><span class="cd-label">hrs</span></div>
     <span class="cd-sep">:</span>
-    <div class="cd-block"><span class="cd-num" id="cdM">47</span><span class="cd-label">min</span></div>
+    <div class="cd-block"><span class="cd-num" id="cdM">00</span><span class="cd-label">min</span></div>
     <span class="cd-sep">:</span>
     <div class="cd-block"><span class="cd-num" id="cdS">00</span><span class="cd-label">sec</span></div>
   </div>
@@ -1216,8 +1216,8 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <div class="hero-tag">A real story. Real numbers. Real transformation.</div>
 
     <h1 class="hero-quote">
-      This is why your diet keeps failing you<br>
-      <em>and how my clients lose up to 7kg in their first month</em><br>
+      Why normal diets stop working for women over 35<br>
+      <em>and how my clients lose up to 7kg in their first month instead</em><br>
       after years of trying everything
     </h1>
 
@@ -1235,7 +1235,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
       This is what 40-year-old Zaynab said after losing 25kg in 9 months — with PCOS, 3 kids, high insulin, high cholesterol, and more than 7 failed dietitians behind her.
     </p>
     <p class="hero-sub" style="font-size:16px;">
-      No surgery. No medication. No shortcuts.
+      No surgery. No supplements. No shortcuts. She worked alongside her doctor throughout.
       Gym training, custom nutrition, and a coach who showed up every single day.
     </p>
 
@@ -1250,7 +1250,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
       </div>
       <div class="hero-proof-item">
         <div class="hero-proof-num">0</div>
-        <div class="hero-proof-label">pills or medication</div>
+        <div class="hero-proof-label">supplements or shortcuts</div>
       </div>
     </div>
 
@@ -1337,7 +1337,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
       </li>
       <li class="failed-item">
         <div class="failed-x">✕</div>
-        <p class="failed-text">The doctor said: take medication. She said no. She wanted to fix the root cause, not cover it up.</p>
+        <p class="failed-text">She wanted to work on the root cause, not just cover up the symptoms — and she did it with her doctor alongside her the whole way.</p>
       </li>
       <li class="failed-item">
         <div class="failed-x">✕</div>
@@ -1435,7 +1435,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
       </div>
       <div class="result-card">
         <div class="result-num">0</div>
-        <div class="result-label">medication used</div>
+        <div class="result-label">supplements used</div>
       </div>
     </div>
 
@@ -1640,7 +1640,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <div class="guarantee-box">
       <div class="guarantee-icon">✓</div>
       <h3 class="guarantee-title">The 30-Day Superwoman Guarantee</h3>
-      <p class="guarantee-text">Follow the system for 30 days — check in daily, follow the nutrition plan, do the workouts. If you don't lose at least 4kg and feel a measurable shift in your energy and confidence — Rony will continue working with you at no extra charge until you do.<br><br><strong style="color: var(--deep);">You risk nothing. The only thing you can lose is the weight.</strong></p>
+      <p class="guarantee-text">Do the 30 days properly — daily check-ins, the nutrition plan, the workouts — and if you're not seeing real progress, Rony keeps working with you at no extra cost until you are.<br><br><strong style="color: var(--deep);">You risk nothing. The only thing you can lose is the weight.</strong></p>
     </div>
 
     <div style="text-align: center;">
@@ -1827,6 +1827,8 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   </p>
   <p style="margin-top: 12px;">
     <a href="https://www.instagram.com/rony.kawkab" target="_blank" rel="noopener" style="color: var(--bark); font-size: 13px; text-decoration: none; opacity: 0.8;">@rony.kawkab on Instagram</a>
+    <span style="color: var(--bark); opacity: 0.4; margin: 0 10px;">·</span>
+    <a href="https://wa.me/96171076341?text=Hi%20Rony!%20I%20saw%20the%20Superwoman%20System%20and%20I%27m%20interested.%20Can%20you%20tell%20me%20more%3F" target="_blank" rel="noopener noreferrer" style="color: var(--bark); font-size: 13px; text-decoration: none; opacity: 0.8;">WhatsApp</a>
   </p>
 </footer>
 
@@ -1983,28 +1985,24 @@ function toggleFaq(el) {
 
 // Countdown Timer
 (function() {
-  var KEY = 'sw_deadline';
-  var stored = localStorage.getItem(KEY);
-  var deadline;
-  if (stored) {
-    deadline = parseInt(stored, 10);
-  } else {
-    deadline = Date.now() + (11 * 3600 + 47 * 60) * 1000;
-    localStorage.setItem(KEY, deadline);
-  }
+  // REAL cohort close date — same for every visitor, never resets.
+  // Change this date when you open the next cohort.
+  var deadline = new Date('2026-09-30T23:59:59').getTime();
+
   function pad(n) { return n < 10 ? '0' + n : String(n); }
   function tick() {
     var diff = deadline - Date.now();
+    var bar = document.getElementById('countdownBar');
     if (diff <= 0) {
-      document.getElementById('cdH').textContent = '00';
-      document.getElementById('cdM').textContent = '00';
-      document.getElementById('cdS').textContent = '00';
+      // Cohort closed — hide the timer rather than showing a dead 00:00:00
+      if (bar) bar.style.display = 'none';
       return;
     }
-    var h = Math.floor(diff / 3600000);
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
     var m = Math.floor((diff % 3600000) / 60000);
     var s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('cdH').textContent = pad(h);
+    document.getElementById('cdH').textContent = d > 0 ? d + 'd ' + pad(h) : pad(h);
     document.getElementById('cdM').textContent = pad(m);
     document.getElementById('cdS').textContent = pad(s);
   }
@@ -2045,7 +2043,7 @@ function simpleSubmit() {
 
   // Fire Pixel on modal open too
   if (typeof fbq === 'function') {
-    fbq('track', 'Lead', { content_name: 'Superwoman Application Started' });
+    fbq('trackCustom', 'ApplicationStarted', { content_name: 'Superwoman' });
   }
 
   // Pre-fill modal read-only fields
@@ -2815,6 +2813,9 @@ function submitWithWhatsApp() {
 
 <style>
 #waFloat {
+  /* Demoted while ads are running — it competed with the application CTA.
+     WhatsApp now lives in the footer. Delete this line to bring it back. */
+  display: none;
   position: fixed;
   bottom: 28px;
   right: 28px;
