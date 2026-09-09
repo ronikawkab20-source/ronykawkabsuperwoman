@@ -1155,19 +1155,34 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   background: var(--accent);
   color: #fff;
   text-align: center;
-  padding: 14px 24px;
+  padding: 11px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 2px 16px rgba(184,89,59,0.4);
+  transition: padding 0.22s ease, box-shadow 0.22s ease;
 }
-.countdown-bar p {
+.countdown-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.22s ease;
+}
+.cd-title {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.9;
-  margin-bottom: 6px;
+  margin: 0;
+}
+.cd-tagline {
+  margin: 7px 0 0;
+  font-size: 13px;
+  opacity: 0.85;
+  font-weight: 500;
+  transition: opacity 0.18s ease;
 }
 .countdown-digits {
   display: flex;
@@ -1181,6 +1196,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   padding: 5px 12px;
   min-width: 52px;
   text-align: center;
+  transition: padding 0.22s ease, min-width 0.22s ease, background 0.22s ease;
 }
 .cd-num {
   font-size: 22px;
@@ -1188,6 +1204,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   line-height: 1;
   display: block;
   font-variant-numeric: tabular-nums;
+  transition: font-size 0.22s ease;
 }
 .cd-label {
   font-size: 9px;
@@ -1195,8 +1212,50 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.8;
+  transition: font-size 0.22s ease, opacity 0.18s ease;
 }
-.cd-sep { font-size: 20px; font-weight: 800; opacity: 0.6; line-height: 1.4; }
+.cd-sep { font-size: 20px; font-weight: 800; opacity: 0.6; line-height: 1.4; transition: font-size 0.22s ease; }
+
+/* ---- Compact state: collapses to a single slim line once scrolled ---- */
+.countdown-bar.is-compact {
+  padding: 6px 16px;
+  box-shadow: 0 1px 10px rgba(184,89,59,0.32);
+}
+.countdown-bar.is-compact .countdown-inner {
+  flex-direction: row;
+  justify-content: center;
+  gap: 12px;
+}
+.countdown-bar.is-compact .cd-title {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.countdown-bar.is-compact .cd-tagline {
+  display: none;
+}
+.countdown-bar.is-compact .countdown-digits { gap: 3px; }
+.countdown-bar.is-compact .cd-block {
+  background: transparent;
+  padding: 0 2px;
+  min-width: 0;
+}
+.countdown-bar.is-compact .cd-num { font-size: 15px; }
+.countdown-bar.is-compact .cd-label {
+  font-size: 8px;
+  opacity: 0.7;
+  margin-left: 1px;
+}
+.countdown-bar.is-compact .cd-sep { font-size: 13px; }
+
+@media (max-width: 480px) {
+  .cd-block { min-width: 44px; padding: 5px 8px; }
+  .cd-num { font-size: 19px; }
+  .cd-tagline { font-size: 12px; }
+  .countdown-bar.is-compact .cd-title { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .countdown-bar, .countdown-inner, .cd-block, .cd-num, .cd-label, .cd-sep { transition: none; }
+}
 
 /* ===== CLIENT REVIEWS ===== */
 .reviews-section { background: var(--sand); }
@@ -1486,7 +1545,8 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 
 
 <div class="countdown-bar" id="countdownBar">
-  <p>September cohort closes in</p>
+  <div class="countdown-inner">
+  <p class="cd-title">September cohort closes in</p>
   <div class="countdown-digits">
     <div class="cd-block" id="cdDayBlock"><span class="cd-num" id="cdD">00</span><span class="cd-label">days</span></div>
     <span class="cd-sep" id="cdDaySep">:</span>
@@ -1496,7 +1556,8 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <span class="cd-sep">:</span>
     <div class="cd-block"><span class="cd-num" id="cdS">00</span><span class="cd-label">sec</span></div>
   </div>
-  <p style="margin-top:6px;font-size:13px;opacity:0.85;font-weight:500;">2027 is in 4 months. The version of you who started today will be unrecognizable.</p>
+  </div>
+  <p class="cd-tagline">2027 is in 4 months. The version of you who started today will be unrecognizable.</p>
 </div>
 
 
@@ -2371,6 +2432,25 @@ function submitForm() {
   document.getElementById('progressBar').style.display = 'none';
 }
 
+
+// ===== Countdown bar: collapse to a slim line on scroll =====
+(function(){
+  var bar = document.getElementById('countdownBar');
+  if (!bar) return;
+  var ticking = false;
+  function apply() {
+    // Hysteresis so it doesn't flicker on the threshold
+    var y = window.scrollY || window.pageYOffset;
+    var compact = bar.classList.contains('is-compact');
+    if (!compact && y > 130)      bar.classList.add('is-compact');
+    else if (compact && y < 70)   bar.classList.remove('is-compact');
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking) { ticking = true; window.requestAnimationFrame(apply); }
+  }, { passive: true });
+  apply();
+})();
 
 // ===== Review screenshot lightbox =====
 function openShot(btn) {
