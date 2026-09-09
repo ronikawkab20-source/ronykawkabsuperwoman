@@ -1254,20 +1254,21 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 .cd-t-short { display: none; }
 
 @media (max-width: 560px) {
+  /* --- expanded state on small screens --- */
+  .cd-block   { min-width: 44px; padding: 5px 8px; }
+  .cd-num     { font-size: 19px; }
+  .cd-tagline { font-size: 12px; }
+
+  /* --- compact state: declared last so it always wins here --- */
+  .countdown-bar.is-compact { padding: 5px 12px; }
   .countdown-bar.is-compact .cd-t-long  { display: none; }
   .countdown-bar.is-compact .cd-t-short { display: inline; }
-  .countdown-bar.is-compact .countdown-inner { gap: 8px; }
-  .countdown-bar.is-compact .cd-title { font-size: 10px; white-space: nowrap; }
-  .countdown-bar.is-compact .cd-num { font-size: 14px; }
-  .countdown-bar.is-compact .cd-label { font-size: 7px; }
-  .countdown-bar.is-compact { padding: 5px 12px; }
-}
-
-@media (max-width: 480px) {
-  .cd-block { min-width: 44px; padding: 5px 8px; }
-  .cd-num { font-size: 19px; }
-  .cd-tagline { font-size: 12px; }
-  .countdown-bar.is-compact .cd-title { font-size: 10px; }
+  .countdown-bar.is-compact .countdown-inner { gap: 8px; flex-wrap: nowrap; }
+  .countdown-bar.is-compact .cd-title  { font-size: 10px; white-space: nowrap; }
+  .countdown-bar.is-compact .cd-block  { min-width: 0; padding: 0 2px; background: transparent; }
+  .countdown-bar.is-compact .cd-num    { font-size: 14px; }
+  .countdown-bar.is-compact .cd-label  { font-size: 7px; }
+  .countdown-bar.is-compact .cd-sep    { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .countdown-bar, .countdown-inner, .cd-block, .cd-num, .cd-label, .cd-sep { transition: none; }
