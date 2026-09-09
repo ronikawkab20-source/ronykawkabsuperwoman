@@ -1178,8 +1178,10 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   margin: 0;
 }
 .cd-tagline {
-  margin: 7px 0 0;
+  margin: 6px auto 0;
+  max-width: 520px;
   font-size: 13px;
+  line-height: 1.35;
   opacity: 0.85;
   font-weight: 500;
   transition: opacity 0.18s ease;
@@ -1246,6 +1248,20 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   margin-left: 1px;
 }
 .countdown-bar.is-compact .cd-sep { font-size: 13px; }
+.countdown-bar.is-compact .countdown-inner { flex-wrap: nowrap; }
+
+/* Label swaps to a short form where space is tight */
+.cd-t-short { display: none; }
+
+@media (max-width: 560px) {
+  .countdown-bar.is-compact .cd-t-long  { display: none; }
+  .countdown-bar.is-compact .cd-t-short { display: inline; }
+  .countdown-bar.is-compact .countdown-inner { gap: 8px; }
+  .countdown-bar.is-compact .cd-title { font-size: 10px; white-space: nowrap; }
+  .countdown-bar.is-compact .cd-num { font-size: 14px; }
+  .countdown-bar.is-compact .cd-label { font-size: 7px; }
+  .countdown-bar.is-compact { padding: 5px 12px; }
+}
 
 @media (max-width: 480px) {
   .cd-block { min-width: 44px; padding: 5px 8px; }
@@ -1546,7 +1562,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 
 <div class="countdown-bar" id="countdownBar">
   <div class="countdown-inner">
-  <p class="cd-title">September cohort closes in</p>
+  <p class="cd-title"><span class="cd-t-long">September cohort closes in</span><span class="cd-t-short">Closes in</span></p>
   <div class="countdown-digits">
     <div class="cd-block" id="cdDayBlock"><span class="cd-num" id="cdD">00</span><span class="cd-label">days</span></div>
     <span class="cd-sep" id="cdDaySep">:</span>
