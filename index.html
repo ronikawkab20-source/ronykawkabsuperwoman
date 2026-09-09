@@ -2374,7 +2374,9 @@ function submitForm() {
   // ===== SAFETY NET: Save to Google Sheet + Send Email =====
   // IMPORTANT: Replace the URL below with your Google Apps Script Web App URL
   // Follow the instructions in google-apps-script.js to set it up
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzItWwl2RyqdFDCyP4tUGhKN_DSppWRM2gGzKRFm7QPBGNVykA7TUlWwnB1m0KZkjZV/exec';
+  // NOTE: this function is legacy (old inline form) and is no longer called.
+  // Live sheet delivery happens via sendToSheet() / SHEET_ENDPOINT below.
+  const GOOGLE_SCRIPT_URL = '';
 
   const formData = {
     name: name,
@@ -2516,6 +2518,22 @@ function toggleFaq(el) {
   setInterval(tick, 1000);
 })();
 
+// ===== Google Sheet endpoint =====
+// Paste the /exec URL from your Apps Script deployment here.
+var SHEET_ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+
+function sendToSheet(payload) {
+  if (!SHEET_ENDPOINT || SHEET_ENDPOINT.indexOf('PASTE_') === 0) return;
+  try {
+    fetch(SHEET_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+  } catch (err) {}
+}
+
 // ===== STEP 1: Validate contact info → open modal =====
 function simpleSubmit() {
   var nameEl = document.getElementById('sname');
@@ -2544,8 +2562,17 @@ function simpleSubmit() {
   earlyParams.append('name',      window._app.name);
   earlyParams.append('whatsapp',  window._app.wa);
   earlyParams.append('email',     window._app.email);
+  earlyParams.append('step_completed', 'Step 1 only');
   fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: earlyParams.toString() })
     .catch(function(e){ console.log('Early capture:', e); });
+
+  // Mirror the partial capture into the Google Sheet
+  sendToSheet({
+    step_completed: 'Step 1 only',
+    name:  window._app.name,
+    whatsapp: window._app.wa,
+    email: window._app.email
+  });
 
   // Fire Pixel on modal open too
   if (typeof fbq === 'function') {
@@ -2763,6 +2790,13 @@ function validateAndCollect() {
   // Save to Netlify
   fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })
     .catch(function(e) { console.log('Final save:', e); });
+
+  // Save the complete application to the Google Sheet
+  var sheetPayload = {};
+  params.forEach(function(value, key){
+    if (key !== 'form-name') sheetPayload[key] = value;
+  });
+  sendToSheet(sheetPayload);
 
   // Pixel
   if (typeof fbq === 'function') {
