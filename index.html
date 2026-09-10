@@ -1314,6 +1314,55 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   background: var(--clay);
 }
 
+.review-video {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) 1fr;
+  gap: 32px;
+  align-items: center;
+  margin-top: 28px;
+  padding: 22px;
+  background: var(--warm-white);
+  border: 1px solid var(--clay);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.review-video-frame {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.16);
+}
+.review-video-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.review-video-title {
+  margin: 14px 0 0;
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--deep);
+}
+.review-video-text {
+  margin: 10px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--charcoal);
+}
+.review-video-caption { margin-top: 16px; }
+@media (max-width: 640px) {
+  .review-video { grid-template-columns: 1fr; gap: 18px; padding: 16px; }
+  .review-video-frame { max-width: 320px; margin: 0 auto; }
+  .review-video-copy { text-align: center; }
+  .review-video-copy .review-verified { align-self: center; }
+  .review-video-title { font-size: 22px; }
+}
+
 .reviews-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1844,11 +1893,28 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <p class="section-sub">Screenshots exactly as they arrived &mdash; timestamps and all. Names shown with permission. Tap any one to read the original.</p>
 
     <div class="reviews-trust">
-      <div class="reviews-trust-item"><strong>4</strong><span>messages shown</span></div>
+      <div class="reviews-trust-item"><strong>5</strong><span>real testimonials</span></div>
       <div class="reviews-trust-sep" aria-hidden="true"></div>
       <div class="reviews-trust-item"><strong>0</strong><span>edited or staged</span></div>
       <div class="reviews-trust-sep" aria-hidden="true"></div>
       <div class="reviews-trust-item"><strong>100%</strong><span>shared with permission</span></div>
+    </div>
+
+    <div class="review-video">
+      <div class="review-video-frame">
+        <video controls playsinline preload="none" poster="review-video-poster.jpg">
+          <source src="review-video.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="review-video-copy">
+        <div class="review-verified">
+          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M8 0l1.9 1.4 2.3-.3 1 2.1 2.1 1-.3 2.3L16 8l-1.4 1.9.3 2.3-2.1 1-1 2.1-2.3-.3L8 16l-1.9-1.4-2.3.3-1-2.1-2.1-1 .3-2.3L0 8l1.4-1.9-.3-2.3 2.1-1 1-2.1 2.3.3z"/><path fill="var(--sand)" d="M7.1 10.9L4.6 8.4l1-1 1.5 1.5 3.4-3.4 1 1z"/></svg>
+          <span>Client video</span>
+        </div>
+        <h3 class="review-video-title">In her own words.</h3>
+        <p class="review-video-text">No script, no retakes &mdash; filmed on a phone at the gym, with Rony standing right next to her. Press play and hear it from her directly.</p>
+        <p class="review-card-caption review-video-caption">Filmed with Coach Rony &middot; 42 seconds</p>
+      </div>
     </div>
 
     <div class="reviews-grid">
