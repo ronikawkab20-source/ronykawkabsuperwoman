@@ -2,7 +2,7 @@
 // The Apps Script URL lives in the Netlify environment variable GOOGLE_SCRIPT_URL and never reaches the browser,
 // so the endpoint can no longer be copied out of the page source and spammed.
 const SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
-const ALLOWED_ORIGIN = /^https:\/\/((www\.)?superwoman\.fitness-maestro\.com|[a-z0-9-]+(--[a-z0-9-]+)?\.netlify\.app)$/;
+const ALLOWED_ORIGIN = /^https:\/\/((www\.)?superwoman\.(fitness-maestro|ronykawkab)\.com|[a-z0-9-]+(--[a-z0-9-]+)?\.netlify\.app)$/;
 
 export default async (req) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
