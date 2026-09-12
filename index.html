@@ -2603,15 +2603,14 @@ function toggleFaq(el) {
 
 // ===== Google Sheet endpoint =====
 // Paste the /exec URL from your Apps Script deployment here.
-var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyrohzMCvHGoUMEfzSC22QChxDXEGvg_SMd5aNmaXcYn3_zR_su0xDjAmaT1EYr_W_XHA/exec';
+var SHEET_ENDPOINT = '/api/sheet'; // server-side relay; the Google endpoint is stored in Netlify env, not in this page
 
 function sendToSheet(payload) {
-  if (!SHEET_ENDPOINT || SHEET_ENDPOINT.indexOf('PASTE_') === 0) return;
+  if (!SHEET_ENDPOINT) return;
   try {
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     }).catch(function(){});
   } catch (err) {}
@@ -3488,7 +3487,7 @@ function submitWithWhatsApp() {
       style="width:100%;flex:1;border:none;"
       title="Book your consultation with Rony"
       loading="eager"
-      allow="camera; microphone; autoplay">
+      allow="autoplay">
     </iframe>
   </div>
 </div>
