@@ -1623,7 +1623,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <div class="cd-block"><span class="cd-num" id="cdS">00</span><span class="cd-label">sec</span></div>
   </div>
   </div>
-  <p class="cd-tagline">2027 is in 4 months. The version of you who started today will be unrecognizable.</p>
+  <p class="cd-tagline"><span id="nyTagline">2027 is in 3 months.</span> The version of you who started today will be unrecognizable.</p>
 </div>
 
 
@@ -1676,7 +1676,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <div style="margin-top:32px;">
       <p style="font-size:14px;font-weight:600;color:var(--bark);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">Starting from $400/month</p>
       <a href="#apply" class="cta-btn">Apply for the Superwoman Program →</a>
-      <p class="cta-sub">Takes 2 minutes. Rony reviews every application personally.</p>
+      <p class="cta-sub">Step 1 takes 30 seconds. Rony reviews every application personally.</p>
     </div>
     <div style="display:inline-flex; align-items:center; gap:8px; margin-top:16px; background:rgba(184,89,59,0.08); border:1px solid rgba(184,89,59,0.18); border-radius:100px; padding:7px 18px;">
       <div style="display:flex; gap:4px;">
@@ -2153,7 +2153,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         </div>
         <p class="price-anchor-note">Your exact investment is matched to your situation after Rony reviews your application.</p>
       </div>
-      <p class="value-stack-note"><strong>Apply below. Takes 30 seconds.</strong></p>
+      <p class="value-stack-note"><strong>Apply below. Step 1 takes 30 seconds.</strong></p>
     </div>
 
     <!-- GUARANTEE -->
@@ -2176,7 +2176,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         <span class="spots-label">3 of 5 spots taken this month</span>
       </div>
       <a href="#apply" class="cta-btn cta-btn-secondary">Claim Your Spot — Start Immediately →</a>
-      <p class="cta-sub" style="margin-top: 10px;">Takes 2 minutes. Rony reviews every application personally.</p>
+      <p class="cta-sub" style="margin-top: 10px;">Step 1 takes 30 seconds. Rony reviews every application personally.</p>
     </div>
   </div>
 </section>
@@ -2195,7 +2195,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
           <span class="faq-icon">+</span>
         </div>
         <div class="faq-answer">
-          The investment is discussed personally — after Rony reviews your application and understands your specific situation. There is no one-size-fits-all price because there is no one-size-fits-all program. What we can say: most clients tell us it costs far less than the money they wasted on another failed dietitian, another meal plan app, or another month of not changing.
+          The program starts from $400/month. Your exact plan is matched to your situation after Rony reviews your application — there is no one-size-fits-all price because there is no one-size-fits-all program. And most clients tell us it costs far less than the money they wasted on another failed dietitian, another meal plan app, or another month of not changing.
         </div>
       </div>
 
@@ -2304,7 +2304,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <!-- STEP INDICATOR -->
     <div class="stepnote">
       <span class="stepnote-pill">Step 1 of 2</span>
-      <span class="stepnote-text">Your contact details — 30 seconds. A few questions about your situation come next.</span>
+      <span class="stepnote-text">Your contact details — 30 seconds. Step 2 is a few questions about your situation.</span>
     </div>
 
     <div class="app-form">
@@ -2613,7 +2613,8 @@ function sendToSheet(payload) {
     fetch(SHEET_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      keepalive: true
     }).catch(function(){});
   } catch (err) {}
 }
@@ -2699,6 +2700,7 @@ function simpleSubmit() {
 }
 
 function closeModal() {
+  flushPartial();
   document.getElementById('appModal').style.display = 'none';
   document.body.style.overflow = '';
 }
@@ -2801,9 +2803,24 @@ function saveProgress(step) {
     p.append('what_stopped',      san(document.getElementById('m_what_stopped').value.trim(), 500));
   }
 
-  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: p.toString() })
-    .catch(function(e) { console.log('Progress save step ' + step + ':', e); });
+  // No Netlify form submission per step (saves credits). Keep her latest answers in memory;
+  // they go to the Google Sheet only if she leaves before finishing (see flushPartial).
+  var obj = {};
+  p.forEach(function(v, k){ if (k !== 'form-name') obj[k] = v; });
+  obj.step_completed = 'Stopped after part ' + step + ' of 4';
+  window._partial = obj;
+  window._partialStep = step;
 }
+
+// ===== SEND UNFINISHED APPLICATION ONCE, WHEN SHE LEAVES =====
+function flushPartial() {
+  if (window._appDone || !window._partial) return;
+  if ((window._partialSentStep || 0) >= window._partialStep) return; // already sent this far
+  window._partialSentStep = window._partialStep;
+  sendToSheet(window._partial);
+}
+window.addEventListener('pagehide', flushPartial);
+document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') flushPartial(); });
 
 // ===== BOOKING MODAL =====
 function openBookingModal() {
@@ -2880,6 +2897,7 @@ function validateAndCollect() {
   params.forEach(function(value, key){
     if (key !== 'form-name') sheetPayload[key] = value;
   });
+  window._appDone = true; // finished — no partial row needed
   sendToSheet(sheetPayload);
 
   // Pixel
@@ -2931,7 +2949,7 @@ function submitWithWhatsApp() {
     <div id="appProgress">
       <div id="appProgressBar"></div>
     </div>
-    <div id="appStepLabel">Step <span id="appStepCurrent">1</span> of 4</div>
+    <div id="appStepLabel">Step 2 of 2 · Part <span id="appStepCurrent">1</span> of 4</div>
 
     <!-- ---- STEP 1: BODY ---- -->
     <div class="app-step" id="mstep1">
@@ -3125,7 +3143,7 @@ function submitWithWhatsApp() {
     <div class="app-step" id="mstep4" style="display:none;">
       <div class="mstep-tag">Your Readiness</div>
       <h3 class="mstep-title">One last thing</h3>
-      <p class="mstep-sub">Rony only works with women who are truly ready. These last questions tell her everything.</p>
+      <p class="mstep-sub">Rony only works with women who are truly ready. These last questions tell him everything.</p>
 
       <div class="mfield">
         <label class="mlabel">Why now — what finally made you take action?</label>
@@ -3482,6 +3500,14 @@ function submitWithWhatsApp() {
       </div>
       <button onclick="closeBookingModal()" style="background:none;border:none;font-size:26px;color:#b0a090;cursor:pointer;line-height:1;padding:0 0 0 16px;" aria-label="Close">&times;</button>
     </div>
+    <!-- Pre-call panel -->
+    <div id="preCall" style="flex-shrink:0;max-height:38vh;overflow-y:auto;padding:14px 24px;background:#fbf6f1;border-bottom:1px solid #f0e8e0;font-family:Arial,sans-serif;font-size:13px;line-height:1.5;color:#3a2e25;">
+      <p style="margin:0 0 8px;"><strong>What happens on the call:</strong> 15 minutes. We look at where you are, where you want to be, and whether the program fits you. If it does, you can start this week.</p>
+      <p style="margin:0 0 8px;"><strong>Before the call, think about:</strong> your #1 goal for the next 90 days, what you've already tried, and what staying the same for another year would cost you.</p>
+      <p style="margin:0 0 10px;">If you make big decisions with your husband, bring him to the call.</p>
+      <p style="margin:0 0 12px;font-size:12px;color:#6b5a4c;">Zaynab: 25kg lost in 9 months · Rawan: clothes fit better and sleeping well again, under a month postpartum · Backed by the 30-day Superwoman Guarantee</p>
+      <a id="bookedWa" href="https://wa.me/96171076341" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;background:#25D366;color:#fff;font-weight:700;text-decoration:none;padding:11px 14px;border-radius:10px;">Booked? Confirm with Rony on WhatsApp ✅</a>
+    </div>
     <!-- Fillout iframe -->
     <iframe
       src="https://forms.fillout.com/t/4nR3sFd3kSus"
@@ -3500,12 +3526,24 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeBookingModal();
 });
 // Show booking modal with flex
-var _origOpenBooking = openBookingModal;
+
 function openBookingModal() {
   var m = document.getElementById('bookingModal');
   m.style.display = 'flex';
+  var n = (window._app && window._app.name) ? window._app.name : '';
+  var w = document.getElementById('bookedWa');
+  if (w) w.href = 'https://wa.me/96171076341?text=' + encodeURIComponent('Booked ✅ ' + n + ' — see you on the call!');
 }
 </script>
 
+<script>
+// Keep the "2027 is in X months" countdown line accurate automatically
+(function(){
+  var el = document.getElementById('nyTagline'); if (!el) return;
+  var now = new Date(), next = now.getFullYear() + 1;
+  var months = Math.round((new Date(next, 0, 1) - now) / (1000*60*60*24*30.44));
+  el.textContent = months >= 2 ? next + ' is in ' + months + ' months.' : next + ' is only weeks away.';
+})();
+</script>
 </body>
 </html>
