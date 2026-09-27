@@ -1368,26 +1368,15 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   gap: 20px;
   margin-top: 28px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 10px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--earth) transparent;
+  padding-bottom: 4px;
+  scrollbar-width: none;
 }
-.reviews-grid::-webkit-scrollbar { height: 6px; }
-.reviews-grid::-webkit-scrollbar-thumb { background: var(--earth); border-radius: 100px; }
-.reviews-grid::-webkit-scrollbar-track { background: transparent; }
+.reviews-grid::-webkit-scrollbar { display: none; }
 .reviews-grid > .review-card {
   flex: 0 0 clamp(250px, 76vw, 330px);
-  scroll-snap-align: start;
 }
-.reviews-swipe {
-  margin: 10px 0 0;
-  text-align: center;
-  font-size: 12.5px;
-  color: var(--bark);
-  opacity: 0.8;
-}
+
 .review-card {
   display: flex;
   flex-direction: column;
@@ -2014,8 +2003,6 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         <figcaption class="review-card-caption"><strong>Rihab</strong> &mdash; First 8 days</figcaption>
       </figure>
     </div>
-
-    <p class="reviews-swipe">Swipe to read more &rarr;</p>
 
     <p class="reviews-disclaimer">Individual results vary. These women followed the programme daily and were coached directly by Rony.</p>
   </div>
@@ -3565,31 +3552,56 @@ function openBookingModal() {
 })();
 </script>
 <script>
-// Reviews drift to the right on their own; any touch or hover hands control back to the reader.
+// Reviews glide to the right continuously and loop for ever.
 (function () {
   var row = document.querySelector('.reviews-grid');
   if (!row) return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var paused = false, wake;
+  var originals = Array.prototype.slice.call(row.children);
+  if (!originals.length) return;
+
+  // A second copy of the run lets the loop restart without a visible jump.
+  originals.forEach(function (card) {
+    var copy = card.cloneNode(true);
+    copy.setAttribute('aria-hidden', 'true');
+    row.appendChild(copy);
+  });
+
+  var runWidth = 0;
+  function measure() {
+    var gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap || 20) || 20;
+    runWidth = originals.reduce(function (total, card) {
+      return total + card.getBoundingClientRect().width + gap;
+    }, 0);
+  }
+  measure();
+  window.addEventListener('resize', measure);
+
+  var SPEED = 22;            // pixels per second
+  var last = null, paused = false, wake;
+
   function hold() {
     paused = true;
     clearTimeout(wake);
-    wake = setTimeout(function () { paused = false; }, 10000);
+    wake = setTimeout(function () { paused = false; }, 4000);
   }
-  ['pointerdown', 'pointerenter', 'touchstart', 'focusin', 'wheel'].forEach(function (ev) {
+  ['pointerenter', 'pointerdown', 'touchstart', 'wheel'].forEach(function (ev) {
     row.addEventListener(ev, hold, { passive: true });
   });
+  row.addEventListener('pointerleave', function () { paused = false; });
 
-  setInterval(function () {
-    if (paused || document.hidden) return;
-    var card = row.querySelector('.review-card');
-    if (!card) return;
-    var step = card.getBoundingClientRect().width + 20;
-    var end = row.scrollWidth - row.clientWidth - 4;
-    if (row.scrollLeft >= end) row.scrollTo({ left: 0, behavior: 'smooth' });
-    else row.scrollBy({ left: step, behavior: 'smooth' });
-  }, 4500);
+  function frame(now) {
+    if (last === null) last = now;
+    var dt = (now - last) / 1000;
+    last = now;
+    if (!paused && runWidth > 0) {
+      row.scrollLeft += SPEED * dt;
+      if (row.scrollLeft >= runWidth) row.scrollLeft -= runWidth;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
