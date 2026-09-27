@@ -1364,10 +1364,29 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 }
 
 .reviews-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 20px;
   margin-top: 28px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--earth) transparent;
+}
+.reviews-grid::-webkit-scrollbar { height: 6px; }
+.reviews-grid::-webkit-scrollbar-thumb { background: var(--earth); border-radius: 100px; }
+.reviews-grid::-webkit-scrollbar-track { background: transparent; }
+.reviews-grid > .review-card {
+  flex: 0 0 clamp(250px, 76vw, 330px);
+  scroll-snap-align: start;
+}
+.reviews-swipe {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--bark);
+  opacity: 0.8;
 }
 .review-card {
   display: flex;
@@ -1515,7 +1534,7 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 #shotClose:hover { background: rgba(255,255,255,0.28); }
 
 @media (max-width: 640px) {
-  .reviews-grid { grid-template-columns: 1fr; }
+  .reviews-grid { gap: 14px; }
   .review-quote { font-size: 17px; }
   .reviews-trust { border-radius: 14px; gap: 14px; }
   .reviews-trust-sep { display: none; }
@@ -1895,8 +1914,6 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
     <p class="section-sub">Screenshots exactly as they arrived &mdash; timestamps and all. Names shown with permission. Tap any one to read the original.</p>
 
     <div class="reviews-trust">
-      <div class="reviews-trust-item"><strong>5</strong><span>real testimonials</span></div>
-      <div class="reviews-trust-sep" aria-hidden="true"></div>
       <div class="reviews-trust-item"><strong>0</strong><span>edited or staged</span></div>
       <div class="reviews-trust-sep" aria-hidden="true"></div>
       <div class="reviews-trust-item"><strong>100%</strong><span>shared with permission</span></div>
@@ -1997,6 +2014,8 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
         <figcaption class="review-card-caption"><strong>Rihab</strong> &mdash; First 8 days</figcaption>
       </figure>
     </div>
+
+    <p class="reviews-swipe">Swipe to read more &rarr;</p>
 
     <p class="reviews-disclaimer">Individual results vary. These women followed the programme daily and were coached directly by Rony.</p>
   </div>
@@ -3543,6 +3562,34 @@ function openBookingModal() {
   var now = new Date(), next = now.getFullYear() + 1;
   var months = Math.round((new Date(next, 0, 1) - now) / (1000*60*60*24*30.44));
   el.textContent = months >= 2 ? next + ' is in ' + months + ' months.' : next + ' is only weeks away.';
+})();
+</script>
+<script>
+// Reviews drift to the right on their own; any touch or hover hands control back to the reader.
+(function () {
+  var row = document.querySelector('.reviews-grid');
+  if (!row) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var paused = false, wake;
+  function hold() {
+    paused = true;
+    clearTimeout(wake);
+    wake = setTimeout(function () { paused = false; }, 10000);
+  }
+  ['pointerdown', 'pointerenter', 'touchstart', 'focusin', 'wheel'].forEach(function (ev) {
+    row.addEventListener(ev, hold, { passive: true });
+  });
+
+  setInterval(function () {
+    if (paused || document.hidden) return;
+    var card = row.querySelector('.review-card');
+    if (!card) return;
+    var step = card.getBoundingClientRect().width + 20;
+    var end = row.scrollWidth - row.clientWidth - 4;
+    if (row.scrollLeft >= end) row.scrollTo({ left: 0, behavior: 'smooth' });
+    else row.scrollBy({ left: step, behavior: 'smooth' });
+  }, 4500);
 })();
 </script>
 </body>
