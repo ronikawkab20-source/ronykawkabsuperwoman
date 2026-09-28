@@ -1274,6 +1274,42 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
   .countdown-bar, .countdown-inner, .cd-block, .cd-num, .cd-label, .cd-sep { transition: none; }
 }
 
+/* ===== WHY THE BODY CHANGES AFTER 35 ===== */
+.age-section { background: var(--warm-white); }
+.age-lead { margin-top: 16px; font-size: 17px; color: var(--charcoal); line-height: 1.7; }
+.age-lead strong { color: var(--deep); }
+.agewrap {
+  margin-top: 28px;
+  background: var(--cream);
+  border: 1px solid var(--clay);
+  border-radius: 14px;
+  padding: 18px 16px 14px;
+}
+.age-title { font-size: 15px; font-weight: 700; color: var(--deep); }
+.age-sub { margin-top: 3px; font-size: 13px; color: var(--bark); }
+.agewrap svg { display: block; width: 100%; height: auto; margin-top: 12px; }
+.agestats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.agestat {
+  background: var(--cream);
+  border: 1px solid var(--clay);
+  border-radius: 12px;
+  padding: 15px 16px;
+}
+.agestat b {
+  display: block; color: var(--accent); font-size: 26px; font-weight: 800;
+  letter-spacing: -0.02em; line-height: 1.05; font-variant-numeric: tabular-nums;
+}
+.agestat span { display: block; margin-top: 5px; font-size: 13px; color: var(--bark); }
+.age-source { margin-top: 14px; font-size: 11.5px; line-height: 1.6; color: var(--bark); opacity: 0.85; }
+.age-source a { color: var(--bark); }
+.age-turn {
+  margin-top: 22px; background: var(--teal-light);
+  border: 1px solid rgba(42,123,111,0.25); border-radius: 13px; padding: 18px 20px;
+}
+.age-turn p { font-size: 16px; color: var(--charcoal); }
+.age-turn strong { color: var(--teal); }
+@media (max-width: 640px) { .agestats { grid-template-columns: 1fr; } }
+
 /* ===== CLIENT REVIEWS ===== */
 .reviews-section { background: var(--sand); }
 
@@ -1801,6 +1837,68 @@ select.form-input option { background: var(--deep); color: var(--warm-white); }
 </section>
 
 <!-- ==================== THE MECHANISM ==================== -->
+<!-- ==================== WHY THE BODY CHANGES AFTER 35 ==================== -->
+<section class="age-section">
+  <div class="container">
+    <p class="section-tag">The part nobody tells you</p>
+    <h2 class="section-headline">After 35, your body quietly gives muscle away.</h2>
+    <p class="age-lead">This is the real reason the same food that was fine at 28 shows on you at 40. Less muscle means a slower metabolism, weaker bones, a back that complains and less energy for the same day you always did. And dieting on its own makes it worse &mdash; you lose weight <strong>and</strong> the muscle underneath it, so the weight comes back faster every time.</p>
+
+    <div class="agewrap">
+      <p class="age-title">The muscle you still have, if you never train</p>
+      <p class="age-sub">Share of the muscle you carried at 30, by age</p>
+
+      <svg viewBox="0 0 640 290" role="img" aria-label="Chart: muscle remaining falls from 100% at age 30 to about 88% at 60 and about 76% at 70 when you do not strength train.">
+        <g stroke="#E8DFD3" stroke-width="1">
+          <line x1="100" y1="50" x2="600" y2="50"/>
+          <line x1="100" y1="113.3" x2="600" y2="113.3"/>
+          <line x1="100" y1="176.7" x2="600" y2="176.7"/>
+          <line x1="100" y1="240" x2="600" y2="240"/>
+        </g>
+        <g fill="#8B7B68" font-family="'Plus Jakarta Sans',sans-serif" font-size="12" text-anchor="end">
+          <text x="88" y="54">100%</text>
+          <text x="88" y="117">90%</text>
+          <text x="88" y="181">80%</text>
+          <text x="88" y="244">70%</text>
+        </g>
+        <path d="M100,50 L 220,75.3 L 340,100.7 L 460,126 L 580,202 L 580,240 L 100,240 Z" fill="#B8593B" fill-opacity="0.12"/>
+        <polyline points="100,50 220,75.3 340,100.7 460,126 580,202" fill="none" stroke="#B8593B" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <g fill="#B8593B" stroke="#FFFFFF" stroke-width="2">
+          <circle cx="100" cy="50" r="5.5"><title>Age 30: 100%</title></circle>
+          <circle cx="220" cy="75.3" r="5.5"><title>Age 40: about 96%</title></circle>
+          <circle cx="340" cy="100.7" r="5.5"><title>Age 50: about 92%</title></circle>
+          <circle cx="460" cy="126" r="5.5"><title>Age 60: about 88%</title></circle>
+          <circle cx="580" cy="202" r="6.5"><title>Age 70: about 76%</title></circle>
+        </g>
+        <g font-family="'Plus Jakarta Sans',sans-serif" font-weight="700" font-size="13" fill="#1E1B18">
+          <text x="100" y="36" text-anchor="start">100%</text>
+          <text x="580" y="226" text-anchor="end">76%</text>
+        </g>
+        <g fill="#8B7B68" font-family="'Plus Jakarta Sans',sans-serif" font-size="12.5" text-anchor="middle">
+          <text x="100" y="264">30</text>
+          <text x="220" y="264">40</text>
+          <text x="340" y="264">50</text>
+          <text x="460" y="264">60</text>
+          <text x="580" y="264">70</text>
+          <text x="340" y="284" font-size="11.5" letter-spacing="0.08em">AGE</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="agestats">
+      <div class="agestat"><b>3&ndash;5%</b><span>of your muscle goes every decade from age 30</span></div>
+      <div class="agestat"><b>2&ndash;3 kg</b><span>lost per decade if you never strength train</span></div>
+      <div class="agestat"><b>Any age</b><span>muscle comes back when you train it</span></div>
+    </div>
+
+    <p class="age-source">Figures from <a href="https://www.health.harvard.edu/staying-healthy/preserve-your-muscle-mass" target="_blank" rel="noopener">Harvard Health</a> (3&ndash;5% per decade after 30; 4&ndash;6 lb per decade without strength training) and <a href="https://my.clevelandclinic.org/health/diseases/23167-sarcopenia" target="_blank" rel="noopener">Cleveland Clinic</a>. The line shows the typical path without training, drawn from those rates &mdash; the loss speeds up after 60. Your own numbers depend on your body, your food and your health.</p>
+
+    <div class="age-turn">
+      <p><strong>This is the part you can turn around.</strong> Muscle answers to training at any age. That is what Zaynab actually did &mdash; she trained, she ate properly, and her body started behaving like a younger one again: steadier energy, a back that stopped complaining, clothes that fit differently. Not a cream, not a pill. Muscle.</p>
+    </div>
+  </div>
+</section>
+
 <section class="mechanism-section">
   <div class="container">
     <p class="section-tag">Why this works when everything else failed</p>
