@@ -2933,19 +2933,35 @@ function openBookingModal() {
 function closeBookingModal() {
   document.getElementById('bookingModal').style.display = 'none';
   document.body.style.overflow = '';
+  // She already applied — never leave her with no way back to the calendar.
+  if (window._bookingReady) {
+    var am = document.getElementById('appModal');
+    if (am) {
+      setModalStep(5);
+      am.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    markBookingReady();
+  }
+}
+
+// Once she has applied, a booking button stays on screen for the rest of her visit.
+function markBookingReady() {
+  window._bookingReady = true;
+  try { sessionStorage.setItem('swApplied', '1'); } catch (e) {}
+  var f = document.getElementById('bookFloat');
+  if (f) f.style.display = 'flex';
 }
 
 // ===== STEP 4 VALIDATION + FULL DATA COLLECT =====
 function validateAndCollect() {
   var whyNow       = document.getElementById('m_why_now').value.trim();
   var commitment   = (document.querySelector('input[name="commitment"]:checked') || {}).value || '';
-  var dreamOutcome = document.getElementById('m_dream_outcome').value.trim();
 
   if (!whyNow)       { document.getElementById('m_why_now').focus(); return null; }
   if (!commitment)   { alert('Please rate your commitment level (1–10).'); return null; }
-  if (!dreamOutcome) { document.getElementById('m_dream_outcome').focus(); return null; }
   if (!document.querySelector('input[name="investment"]:checked')) {
-    alert('Please let us know if you are ready to invest in yourself.');
+    alert('Please choose one answer about investing in yourself.');
     return null;
   }
 
@@ -2988,7 +3004,6 @@ function validateAndCollect() {
   params.append('what_stopped',      san(document.getElementById('m_what_stopped').value.trim(), 500));
   params.append('why_now',           san(whyNow, 500));
   params.append('commitment_level',  commitment);
-  params.append('dream_outcome',     san(dreamOutcome, 500));
   params.append('investment_ready',  (document.querySelector('input[name="investment"]:checked') || {}).value || '');
   params.append('extra_note',        san(document.getElementById('m_note').value.trim(), 500));
 
@@ -3025,7 +3040,12 @@ function validateAndCollect() {
 function submitWithBooking() {
   var a = validateAndCollect();
   if (!a) return;
-  // Close application modal entirely — go straight to Fillout
+  // Park the application modal on the final step, so closing the calendar
+  // always brings her back to a working "Book My Free Call" button.
+  var fn = document.getElementById('finalName');
+  if (fn && a.name) fn.textContent = a.name;
+  setModalStep(5);
+  markBookingReady();
   document.getElementById('appModal').style.display = 'none';
   document.body.style.overflow = '';
   openBookingModal();
@@ -3271,16 +3291,12 @@ function submitWithWhatsApp() {
       </div>
 
       <div class="mfield">
-        <label class="mlabel">What does your life look like when you reach your goal?</label>
-        <textarea class="minput mtextarea" id="m_dream_outcome" placeholder="Paint the picture — how do you feel, how do you look, what changes?" maxlength="500"></textarea>
-      </div>
-
-      <div class="mfield">
-        <label class="mlabel">Are you ready to invest in yourself to make this change?</label>
+        <label class="mlabel">The Superwoman System is $899 for 90 days. Are you ready to invest that in yourself?</label>
         <div class="mradio-group mradio-col">
-          <label class="mradio"><input type="radio" name="investment" value="Yes — I'm serious and ready to start"> Yes — I'm serious and ready to start</label>
-          <label class="mradio"><input type="radio" name="investment" value="I need to understand the program better first"> I need to understand the program better first</label>
-          <label class="mradio"><input type="radio" name="investment" value="I'm waiting for the right time"> I'm waiting for the right time</label>
+          <label class="mradio"><input type="radio" name="investment" value="Yes — $899 works for me, I'm ready to start"> Yes &mdash; $899 works for me, I&rsquo;m ready to start</label>
+          <label class="mradio"><input type="radio" name="investment" value="Yes — I'm ready. I'd just want to talk through how to handle it"> Yes &mdash; I&rsquo;m ready. I&rsquo;d just want to talk through how to handle it</label>
+          <label class="mradio"><input type="radio" name="investment" value="I want to understand the program first"> I want to understand the program first</label>
+          <label class="mradio"><input type="radio" name="investment" value="No — $899 isn't possible for me right now"> No &mdash; $899 isn&rsquo;t possible for me right now</label>
         </div>
       </div>
 
@@ -3545,6 +3561,48 @@ function submitWithWhatsApp() {
 }
 </style>
 
+<!-- Booking rescue button: appears once she has applied, never disappears -->
+<button type="button" id="bookFloat" onclick="openBookingModal()" aria-label="Book your free call">
+  <span aria-hidden="true" style="font-size:17px;">&#128197;</span> Book my free call
+</button>
+
+<style>
+#bookFloat {
+  display: none;
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, #C4663F 0%, #B8593B 100%);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 26px;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(184,89,59,0.42), 0 0 0 1px rgba(255,255,255,0.14) inset;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  animation: bookFloatIn 0.45s ease both;
+}
+#bookFloat:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 12px 34px rgba(184,89,59,0.55), 0 0 0 1px rgba(255,255,255,0.18) inset;
+}
+@keyframes bookFloatIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(14px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@media (max-width: 480px) {
+  #bookFloat { bottom: 16px; font-size: 14px; padding: 13px 22px; width: calc(100% - 32px); justify-content: center; }
+}
+</style>
+
 <!-- WhatsApp Floating Button -->
 <a href="https://wa.me/96171076341?text=Hi%20Rony!%20I%20saw%20the%20Superwoman%20System%20and%20I%27m%20interested.%20Can%20you%20tell%20me%20more%3F"
    target="_blank"
@@ -3612,15 +3670,20 @@ function submitWithWhatsApp() {
       <p style="margin:0 0 12px;font-size:12px;color:#6b5a4c;">Zaynab: 25kg lost in 9 months · Rawan: clothes fit better and sleeping well again, under a month postpartum · Backed by the 30-day Superwoman Guarantee</p>
       <a id="bookedWa" href="https://wa.me/96171076341" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;background:#25D366;color:#fff;font-weight:700;text-decoration:none;padding:11px 14px;border-radius:10px;">Booked? Confirm with Rony on WhatsApp ✅</a>
     </div>
-    <!-- Fillout iframe -->
-    <iframe
-      src="https://8sbp7bqb4a.zite.so"
-      frameborder="0"
-      style="width:100%;flex:1;border:none;"
-      title="Book your free discovery call"
-      loading="eager"
-      allow="autoplay">
-    </iframe>
+    <!-- Booking calendar -->
+    <div style="position:relative;flex:1;display:flex;min-height:0;">
+      <div style="position:absolute;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#8b7b68;">
+        Loading your calendar&hellip;<br>It takes a few seconds &mdash; please wait.
+      </div>
+      <iframe
+        src="https://8sbp7bqb4a.zite.so"
+        frameborder="0"
+        style="position:relative;z-index:1;width:100%;height:100%;border:none;"
+        title="Book your free discovery call"
+        loading="eager"
+        allow="autoplay">
+      </iframe>
+    </div>
   </div>
 </div>
 
@@ -3630,6 +3693,10 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeBookingModal();
 });
 // Show booking modal with flex
+
+try {
+  if (sessionStorage.getItem('swApplied') === '1') markBookingReady();
+} catch (e) {}
 
 function openBookingModal() {
   var m = document.getElementById('bookingModal');
