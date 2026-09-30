@@ -3647,6 +3647,14 @@ function submitWithWhatsApp() {
 }
 @media (max-width: 480px) {
   #waFloat { bottom: 20px; right: 20px; width: 52px; height: 52px; }
+  /* On a phone the calendar gets the screen; the reading panel stays available but small */
+  #bookHead { padding: 12px 16px 10px !important; }
+  #bookHead > div > div:first-child { font-size: 10px !important; margin-bottom: 2px !important; }
+  #bookHead > div > div:last-child { font-size: 14px !important; line-height: 1.25 !important; }
+  #preCall { max-height: 21vh !important; padding: 11px 16px !important; font-size: 12.5px !important; }
+  #preCall p { margin-bottom: 6px !important; }
+  #bookingModal > div:last-child { height: 94vh !important; max-width: none !important; }
+  #bookingModal { padding: 8px !important; }
 }
 </style>
 
@@ -3655,7 +3663,7 @@ function submitWithWhatsApp() {
   <div id="bookingModalOverlay" onclick="closeBookingModal()" style="position:absolute;inset:0;background:rgba(20,15,10,0.8);backdrop-filter:blur(4px);"></div>
   <div style="position:relative;background:#fff;border-radius:16px;width:100%;max-width:580px;height:min(680px,90vh);overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.4);z-index:1;display:flex;flex-direction:column;">
     <!-- Header -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px 14px;border-bottom:1px solid #f0e8e0;flex-shrink:0;">
+    <div id="bookHead" style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px 14px;border-bottom:1px solid #f0e8e0;flex-shrink:0;">
       <div>
         <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#B8593B;margin-bottom:4px;">Book your free call</div>
         <div style="font-family:Georgia,serif;font-size:17px;color:#1a1410;">With Farah, from Rony&rsquo;s team &mdash; completely free</div>
@@ -3663,7 +3671,7 @@ function submitWithWhatsApp() {
       <button onclick="closeBookingModal()" style="background:none;border:none;font-size:26px;color:#b0a090;cursor:pointer;line-height:1;padding:0 0 0 16px;" aria-label="Close">&times;</button>
     </div>
     <!-- Pre-call panel -->
-    <div id="preCall" style="flex-shrink:0;max-height:38vh;overflow-y:auto;padding:14px 24px;background:#fbf6f1;border-bottom:1px solid #f0e8e0;font-family:Arial,sans-serif;font-size:13px;line-height:1.5;color:#3a2e25;">
+    <div id="preCall" style="flex-shrink:0;max-height:34vh;overflow-y:auto;padding:14px 24px;background:#fbf6f1;border-bottom:1px solid #f0e8e0;font-family:Arial,sans-serif;font-size:13px;line-height:1.5;color:#3a2e25;">
       <p style="margin:0 0 8px;"><strong>What happens on the call:</strong> You speak with Farah from Rony&rsquo;s team. You look at where you are, where you want to be, and whether the program is right for you. If it is, you can start this week.</p>
       <p style="margin:0 0 8px;"><strong>Before the call, think about:</strong> your #1 goal for the next 90 days, what you've already tried, and what staying the same for another year would cost you.</p>
       <p style="margin:0 0 10px;">If you make big decisions with your husband, bring him to the call.</p>
@@ -3672,16 +3680,17 @@ function submitWithWhatsApp() {
     </div>
     <!-- Booking calendar -->
     <div style="position:relative;flex:1;display:flex;min-height:0;">
-      <div style="position:absolute;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#8b7b68;">
+      <div id="calLoading" style="position:absolute;inset:0;z-index:2;transition:opacity 0.25s ease;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:#fff;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#8b7b68;">
         Loading your calendar&hellip;<br>It takes a few seconds &mdash; please wait.
       </div>
       <iframe
-        src="https://8sbp7bqb4a.zite.so"
+        src="https://calendar.app.google/iXYBG5B15hxN5tqVA"
         frameborder="0"
-        style="position:relative;z-index:1;width:100%;height:100%;border:none;"
+        style="position:relative;z-index:1;width:100%;height:100%;border:none;background:#fff;"
         title="Book your free discovery call"
         loading="eager"
-        allow="autoplay">
+        allow="autoplay"
+        onload="var l=document.getElementById('calLoading'); if(l){l.style.opacity='0';setTimeout(function(){l.style.display='none';},250);}">
       </iframe>
     </div>
   </div>
